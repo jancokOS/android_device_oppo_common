@@ -45,6 +45,7 @@
   <string name="oclick_notification_title_connected">O-Click conectat</string>
   <string name="oclick_notification_title_disconnected">O-Click deconectat</string>
   <string name="oclick_notification_content_disconnected">Apăsați butonul O-Click pentru a reconecta</string>
+  <!-- Button settings -->
   <!-- Notification slider -->
   <string name="notification_slider_category_title">Cursor notificare</string>
   <string name="notification_slider_selection_dialog_title">Acțiune</string>
