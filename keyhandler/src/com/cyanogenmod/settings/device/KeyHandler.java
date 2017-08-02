@@ -32,7 +32,6 @@ import android.hardware.SensorManager;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraAccessException;
-import android.media.AudioManager;
 import android.media.session.MediaSessionLegacyHelper;
 import android.net.Uri;
 import android.os.Handler;
@@ -76,7 +75,6 @@ public class KeyHandler implements DeviceKeyHandler {
     private static final int MODE_ALARMS_ONLY = 601;
     private static final int MODE_PRIORITY_ONLY = 602;
     private static final int MODE_NONE = 603;
-    private static final int MODE_VIBRATE = 604;
 
     private static final int GESTURE_WAKELOCK_DURATION = 3000;
 
@@ -96,24 +94,12 @@ public class KeyHandler implements DeviceKeyHandler {
         sSupportedSliderModes.put(MODE_PRIORITY_ONLY,
                 Settings.Global.ZEN_MODE_IMPORTANT_INTERRUPTIONS);
         sSupportedSliderModes.put(MODE_NONE, Settings.Global.ZEN_MODE_OFF);
-        sSupportedSliderModes.put(MODE_VIBRATE, Settings.Global.ZEN_MODE_OFF);
-    }
-
-    private static final SparseIntArray sSupportedSliderModesAudio = new SparseIntArray();
-    static {
-        sSupportedSliderModesAudio.put(MODE_TOTAL_SILENCE, AudioManager.RINGER_MODE_NORMAL);
-        sSupportedSliderModesAudio.put(MODE_ALARMS_ONLY, AudioManager.RINGER_MODE_NORMAL);
-        sSupportedSliderModesAudio.put(MODE_PRIORITY_ONLY,
-                AudioManager.RINGER_MODE_NORMAL);
-        sSupportedSliderModesAudio.put(MODE_NONE, AudioManager.RINGER_MODE_NORMAL);
-        sSupportedSliderModesAudio.put(MODE_VIBRATE, AudioManager.RINGER_MODE_VIBRATE);
     }
 
     private final Context mContext;
     private final PowerManager mPowerManager;
     private KeyguardManager mKeyguardManager;
     private final NotificationManager mNotificationManager;
-    private final AudioManager mAudioManager;
     private EventHandler mEventHandler;
     private SensorManager mSensorManager;
     private CameraManager mCameraManager;
@@ -131,7 +117,6 @@ public class KeyHandler implements DeviceKeyHandler {
         mPowerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         mNotificationManager
                 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mEventHandler = new EventHandler();
         mGestureWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "GestureWakeLock");
@@ -270,7 +255,6 @@ public class KeyHandler implements DeviceKeyHandler {
 
         if (isSliderModeSupported) {
             mNotificationManager.setZenMode(sSupportedSliderModes.get(scanCode), null, TAG);
-            mAudioManager.setRingerModeInternal(sSupportedSliderModesAudio.get(scanCode));
             if (mVibrator != null) {
                 mVibrator.vibrate(40);
             }
